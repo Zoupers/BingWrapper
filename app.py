@@ -11,6 +11,7 @@ app = Flask(__name__)
 def schedule():
     scheduler = AsyncIOScheduler()
     ww = WallpaperWrapper()
+    ww.fetch()
     trigger = IntervalTrigger(days=1)
     scheduler.add_job(lambda: ww.fetch(), trigger)
     scheduler.start()
