@@ -1,16 +1,18 @@
 import datetime
+import os
 
 from flask import Flask
 from apscheduler.triggers.interval import IntervalTrigger
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from src.WallpaperWrapper import WallpaperWrapper
 
+project_root = os.path.abspath(".")
 start_time = datetime.datetime.now()
 app = Flask(__name__)
 
 def schedule():
     scheduler = AsyncIOScheduler()
-    ww = WallpaperWrapper()
+    ww = WallpaperWrapper(root=project_root)
     ww.fetch()
     trigger = IntervalTrigger(days=1)
     scheduler.add_job(lambda: ww.fetch(), trigger)

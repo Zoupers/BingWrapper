@@ -34,7 +34,7 @@ from .Store import Store
 
 
 class WallpaperWrapper:
-    def __init__(self):
+    def __init__(self, root):
         self.root = "https://cn.bing.com"
         self.url = "https://cn.bing.com/HPImageArchive.aspx" \
                    "?format=js&idx=0&n=1&nc=1612409408851&pid=hp" \
@@ -44,7 +44,7 @@ class WallpaperWrapper:
                           "x64; rv:95.0) Gecko/20100101 Firefox/95.0",
             "Referer": "https://cn.bing.com/?mkt=zh-CN"
         }
-        self.store = Store()
+        self.store = Store(root)
 
     def fetch(self):
         try:
