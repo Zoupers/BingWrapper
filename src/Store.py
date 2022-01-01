@@ -11,8 +11,11 @@ import requests
 
 
 class Store:
-    def __init__(self):
-        self.project_root = os.path.abspath('..')
+    def __init__(self, root):
+        if root:
+            self.project_root = root
+        else:
+            self.project_root = os.path.abspath('..')
         self.images_root = os.path.join(self.project_root, "images")
         if not os.path.exists(self.images_root):
             os.mkdir(self.images_root)
