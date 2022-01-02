@@ -3,19 +3,26 @@ import os
 
 from flask import Flask
 from apscheduler.triggers.interval import IntervalTrigger
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 from src.WallpaperWrapper import WallpaperWrapper
 
 project_root = os.path.abspath(".")
 start_time = datetime.datetime.now()
 app = Flask(__name__)
 
+
+def fetch_wallpaper(ww):
+    print("Fetching", datetime.date.today().strftime(format="%Y%m%d"))
+    ww.fetch()
+    print("Finished")
+
+
 def schedule():
-    scheduler = AsyncIOScheduler()
+    scheduler = BackgroundScheduler(timezone='Asia/Shanghai')
     ww = WallpaperWrapper(root=project_root)
     ww.fetch()
-    trigger = IntervalTrigger(days=1)
-    scheduler.add_job(lambda: ww.fetch(), trigger)
+    trigger = IntervalTrigger(seconds=5)
+    scheduler.add_job(lambda: fetch_wallpaper(ww), trigger)
     scheduler.start()
 
 
