@@ -21,7 +21,7 @@ def schedule():
     scheduler = BackgroundScheduler(timezone='Asia/Shanghai')
     ww = WallpaperWrapper(root=project_root)
     ww.fetch()
-    trigger = IntervalTrigger(seconds=5)
+    trigger = IntervalTrigger(days=1)
     scheduler.add_job(lambda: fetch_wallpaper(ww), trigger)
     scheduler.start()
 
