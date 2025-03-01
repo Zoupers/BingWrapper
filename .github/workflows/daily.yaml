@@ -21,7 +21,7 @@ jobs:
         run: uv sync
 
       - name: Run script
-        run: uv run -m bing_wrapper
+        run: uv run -m bing_wrapper --update-latest
 
       - name: Get current date
         id: date

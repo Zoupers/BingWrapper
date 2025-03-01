@@ -60,7 +60,7 @@ class BingWallpaperFetcher:
         self.store = Store(store_root)
         self.logger = logging.getLogger(self.__class__.__name__)
 
-    def fetch(self):
+    def fetch(self, update_latest: bool = False):
         try:
             res = requests.get(url=self.url, headers=self.headers)
             res_json = json.loads(res.text)
@@ -78,6 +78,8 @@ class BingWallpaperFetcher:
             + url.split("&")[1].split(".")[-1]
         )
         self.store.saveBinary(save_name, pic_res.content)
+        if update_latest:
+            self.store.saveBinary("latest.jpg", pic_res.content)
         return save_name
 
 
