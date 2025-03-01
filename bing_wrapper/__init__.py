@@ -1,0 +1,1 @@
+from bing_wrapper.fetcher import BingWallpaperFetcher
