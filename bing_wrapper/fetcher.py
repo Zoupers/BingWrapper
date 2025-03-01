@@ -40,15 +40,22 @@ logging.basicConfig(level=logging.INFO)
 class BingWallpaperFetcher:
     def __init__(self, store_root: str = "."):
         self.root = "https://cn.bing.com"
+        self.region = "zh-CN"
+        self.language = "zh"
+        # 全球壁纸和中国壁纸不一样，另外在中国似乎访问不了全球壁纸
+        # self.region = "en-US"
+        # self.language = "en"
         self.url = (
-            "https://cn.bing.com/HPImageArchive.aspx"
+            "https://global.bing.com/HPImageArchive.aspx"
             "?format=js&idx=0&n=1&nc=1612409408851&pid=hp"
-            "&FORM=BEHPTB&uhd=1&uhdwidth=3840&uhdheight=2160"
+            f"&FORM=BEHPTB&uhd=1&uhdwidth=3840&uhdheight=2160&setmkt={self.region}&setlang={self.language}"
         )
         self.headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; "
             "x64; rv:95.0) Gecko/20100101 Firefox/95.0",
             "Referer": "https://cn.bing.com/?mkt=zh-CN",
+            "Host": "cn.bing.com",
+            "Accept-Language": "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2",
         }
         self.store = Store(store_root)
         self.logger = logging.getLogger(self.__class__.__name__)
