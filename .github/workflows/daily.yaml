@@ -31,7 +31,7 @@ jobs:
         uses: EndBug/add-and-commit@v9
         with:
           add: "./images/*"
-          message: "Update {{ steps.date.outputs.date }} wallpaper"
+          message: "Update ${{ steps.date.outputs.date }} wallpaper"
           author_name: "daily bot"
           author_email: "qy@zouper.cn"
 
