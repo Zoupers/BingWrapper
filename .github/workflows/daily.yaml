@@ -1,0 +1,37 @@
+name: Daily Download Wallpaper
+
+on:
+  schedule:
+    # 每天UTC时间1点运行
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+
+jobs:
+  daily:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.13"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run script
+        run: python -m bing_wrapper
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
+      - name: Commit and push
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: "./images/*"
+          message: "Update {{ steps.date.outputs.date }} wallpaper"
+          author_name: "daily bot"
+          author_email: "qy@zouper.cn"
+
