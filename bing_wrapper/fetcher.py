@@ -39,7 +39,7 @@ logging.basicConfig(level=logging.INFO)
 
 class BingWallpaperFetcher:
     def __init__(self, store_root: str = "."):
-        self.root = "https://cn.bing.com"
+        self.root = "https://global.bing.com"
         self.region = "zh-CN"
         self.language = "zh"
         # 全球壁纸和中国壁纸不一样，另外在中国似乎访问不了全球壁纸
@@ -60,13 +60,17 @@ class BingWallpaperFetcher:
         self.store = Store(store_root)
         self.logger = logging.getLogger(self.__class__.__name__)
 
-    def fetch(self, update_latest: bool = False):
-        try:
-            res = requests.get(url=self.url, headers=self.headers)
-            res_json = json.loads(res.text)
-        except Exception as e:
-            self.logger.error("获取壁纸失败", e)
-            return False
+    def fetch(self, update_latest: bool = False, retry_count: int = 3):
+        for idx in range(retry_count):
+            try:
+                res = requests.get(url=self.url, headers=self.headers)
+                res_json = json.loads(res.text)
+                break
+            except requests.exceptions.RequestException as e:
+                self.logger.error(f"第{idx + 1}次获取壁纸失败", exc_info=e)
+                if idx == retry_count - 1:
+                    return False
+                continue
         url = self.root + res_json["images"][0]["url"]
         pic_res = requests.get(url, headers=self.headers)
         image_name = res_json["images"][0]["copyright"].split("(")[0]
