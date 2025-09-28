@@ -9,10 +9,11 @@
 
 ## 使用
 
-有两种方式
+有三种方式
 
-1. 直接通过app.py运行`python ./app.py`, 默认运行在127.0.0.1:8000，并且每天爬取一次壁纸
-2. 通过`python -m bing_wrapper`运行，每次会爬取当天的壁纸，并保存到`./images`目录下
+1. 可以在[folo](https://app.folo.is/)中添加RSS订阅，订阅地址为`https://raw.githubusercontent.com/Zoupers/BingWrapper/refs/heads/main/rss.xml`
+2. 直接通过app.py运行`python ./app.py`, 默认运行在127.0.0.1:8000，并且每天爬取一次壁纸
+3. 通过`python -m bing_wrapper`运行，每次会爬取当天的壁纸，并保存到`./images`目录下
 
 ## 开发
 
