@@ -123,7 +123,6 @@ class Item(BaseXmlModel, tag="item"):
     guid: Optional[Guid] = element(default=None)  # 子元素 (可选)
     pubDate: Optional[str] = element(default=None)  # 子元素 (可选)
     source: Optional[Source] = element(default=None)  # 子元素 (可选)
-    content: Optional[str] = element(tag="content")
 
 
 class Channel(BaseXmlModel, tag="channel"):

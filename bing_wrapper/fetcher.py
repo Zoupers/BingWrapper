@@ -103,8 +103,7 @@ class BingWallpaperFetcher:
             )
             item = Item(
                 title=today.strftime("%Y-%m-%d") + f" {image_info['title']}",
-                description=image_info["copyright"],
-                content=f'<img src="{image_link_url}" alt="{image_info["copyright"]}" />\n{image_info["copyright"]}',
+                description=f'<img src="{image_link_url}" alt="{image_info["copyright"]}" />\n{image_info["copyright"]}',
                 pubDate=today.strftime("%a, %d %b %Y %H:%M:%S %Z").strip(),
             )
             if len(rss.channel.items) >= rss_max_items:
