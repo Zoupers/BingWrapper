@@ -2,7 +2,7 @@
 @filename: WallpaperWrapper
 @author: Zoupers
 @createTime: 2022/1/1 10:36
-@lastUpdate: 2022/1/1 10:36
+@lastUpdate: 2025/9/28 17:56
 
 方法一，通过以下接口
     cn.bing.com
@@ -27,11 +27,12 @@
     https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&nc=1612409408851&pid=hp&FORM=BEHPTB&uhd=1&uhdwidth=3840&uhdheight=2160
 """
 
+import os
 import requests
 import json
 import datetime
 import logging
-from .Store import Store
+from bing_wrapper.store import Store
 
 
 logging.basicConfig(level=logging.INFO)
@@ -60,7 +61,14 @@ class BingWallpaperFetcher:
         self.store = Store(store_root)
         self.logger = logging.getLogger(self.__class__.__name__)
 
-    def fetch(self, update_latest: bool = False, retry_count: int = 3):
+    def fetch(
+        self,
+        update_latest: bool = False,
+        retry_count: int = 3,
+        update_rss: bool = False,
+        rss_max_items: int = 7,
+        rss_raw_base_url: str = "",
+    ):
         for idx in range(retry_count):
             try:
                 res = requests.get(url=self.url, headers=self.headers)
@@ -71,19 +79,39 @@ class BingWallpaperFetcher:
                 if idx == retry_count - 1:
                     return False
                 continue
-        url = self.root + res_json["images"][0]["url"]
+        image_info = res_json["images"][0]
+        url = self.root + image_info["url"]
         pic_res = requests.get(url, headers=self.headers)
-        image_name = res_json["images"][0]["copyright"].split("(")[0]
+        image_name = image_info["copyright"].split("(")[0]
+        today = datetime.datetime.now()
         save_name = (
-            datetime.date.today().strftime("%Y%m%d")
+            today.strftime("%Y%m%d")
             + "-"
             + image_name.strip()
             + "."
             + url.split("&")[1].split(".")[-1]
         )
-        self.store.saveBinary(save_name, pic_res.content)
+        self.store.save_image(save_name, pic_res.content)
         if update_latest:
-            self.store.saveBinary("latest.jpg", pic_res.content)
+            self.store.save_image("latest.jpg", pic_res.content)
+        if update_rss:
+            from bing_wrapper.rss.models import Item
+
+            rss = self.store.load_rss()
+            image_link_url = os.path.join(
+                rss_raw_base_url, self.store.get_reletive_image_path(save_name)
+            )
+            item = Item(
+                title=today.strftime("%Y-%m-%d") + f" {image_info['title']}",
+                description=image_info["copyright"],
+                content=f'<img src="{image_link_url}" alt="{image_info["copyright"]}" />\n{image_info["copyright"]}',
+                pubDate=today.strftime("%a, %d %b %Y %H:%M:%S %Z").strip(),
+            )
+            if len(rss.channel.items) >= rss_max_items:
+                rss.channel.items = rss.channel.items[: rss_max_items - 1]
+            rss.channel.items.insert(0, item)
+            self.store.save_rss(rss)
+
         return save_name
 
 

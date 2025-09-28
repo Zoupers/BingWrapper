@@ -21,7 +21,7 @@ jobs:
         run: uv sync
 
       - name: Run script
-        run: uv run -m bing_wrapper --update-latest
+        run: uv run -m bing_wrapper --update-latest --update-rss --raw-base-url https://media.githubusercontent.com/media/$GITHUB_REPOSITORY/$GITHUB_REF
 
       - name: Get current date
         id: date
@@ -30,7 +30,9 @@ jobs:
       - name: Commit and push
         uses: EndBug/add-and-commit@v9
         with:
-          add: "./images/*"
+          add: |
+            - "./images/*"
+            - "./rss.xml"
           message: "Update ${{ steps.date.outputs.date }} wallpaper"
           author_name: "daily bot"
           author_email: "qy@zouper.cn"
