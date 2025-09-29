@@ -98,13 +98,18 @@ class BingWallpaperFetcher:
             from bing_wrapper.rss.models import Item
 
             rss = self.store.load_rss()
+
+            pub_date = today.strftime("%a, %d %b %Y %H:%M:%S %Z").strip()
+            rss.channel.pubDate = pub_date
+            rss.channel.lastBuildDate = pub_date
+
             image_link_url = os.path.join(
                 rss_raw_base_url, self.store.get_reletive_image_path(save_name)
             )
             item = Item(
                 title=today.strftime("%Y-%m-%d") + f" {image_info['title']}",
                 description=f'<img src="{image_link_url}" alt="{image_info["copyright"]}" />\n{image_info["copyright"]}',
-                pubDate=today.strftime("%a, %d %b %Y %H:%M:%S %Z").strip(),
+                pubDate=pub_date,
             )
             if len(rss.channel.items) >= rss_max_items:
                 rss.channel.items = rss.channel.items[: rss_max_items - 1]
