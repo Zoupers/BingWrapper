@@ -37,3 +37,14 @@ jobs:
           author_name: "daily bot"
           author_email: "qy@zouper.cn"
 
+  re-run:
+    # snippet from https://github.com/orgs/community/discussions/67654#discussioncomment-8038649
+    needs: fail
+    if: failure() && fromJSON(github.run_attempt) < 3
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+          GH_DEBUG: api
+        run: gh workflow run rerun.yml -F run_id=${{ github.run_id }}
