@@ -8,7 +8,7 @@ on:
 permissions:
   pull-requests: write
   contents: write
-  workflows: write
+  actions: write
 
 jobs:
   check:
