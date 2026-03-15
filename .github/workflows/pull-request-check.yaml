@@ -1,4 +1,4 @@
-name: Dependabot Auto-Merge
+name: Pull Request Check
 
 on:
   pull_request:
@@ -15,9 +15,8 @@ permissions:
   contents: write
 
 jobs:
-  dependabot:
+  check:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -38,7 +37,7 @@ jobs:
           uv run -m bing_wrapper --update-latest --update-rss
 
       - name: Auto-merge Dependabot PRs
-        if: success()
+        if: success() && github.actor == 'dependabot[bot]'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.pull_request.html_url }}
