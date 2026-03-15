@@ -39,7 +39,7 @@ jobs:
 
   re-run:
     # snippet from https://github.com/orgs/community/discussions/67654#discussioncomment-8038649
-    needs: fail
+    needs: daily
     if: failure() && fromJSON(github.run_attempt) < 3
     runs-on: ubuntu-latest
     steps:
@@ -47,4 +47,4 @@ jobs:
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ github.token }}
           GH_DEBUG: api
-        run: gh workflow run rerun.yml -F run_id=${{ github.run_id }}
+        run: gh workflow run rerun.yaml -F run_id=${{ github.run_id }}
