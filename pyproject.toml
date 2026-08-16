@@ -8,7 +8,7 @@ dependencies = [
     "apscheduler>=3.11.3",
     "fastapi[standard]>=0.141.1",
     "pre-commit>=4.6.1",
-    "pydantic-xml>=2.21.0",
+    "pydantic-xml>=2.21.1",
     "requests>=2.34.2",
 ]
 
